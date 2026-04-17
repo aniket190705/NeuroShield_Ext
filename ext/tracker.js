@@ -12,7 +12,14 @@
 
       if (!response?.ok) {
         console.error("Telemetry send failed:", response?.error || "Unknown error");
+        return;
       }
+
+      console.log("Fatigue prediction:", {
+        endpoint: response.endpoint,
+        telemetry: response.telemetry || payload,
+        prediction: response.prediction || null
+      });
     });
   };
 

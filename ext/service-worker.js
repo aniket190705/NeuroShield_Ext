@@ -1,7 +1,10 @@
 const TELEMETRY_ENDPOINTS = [
   "http://localhost:3000/api/telemetry",
   "http://127.0.0.1:3000/api/telemetry",
-  "http://[::1]:3000/api/telemetry"
+  "http://[::1]:3000/api/telemetry",
+  "http://localhost:5000/api/telemetry",
+  "http://127.0.0.1:5000/api/telemetry",
+  "http://[::1]:5000/api/telemetry"
 ];
 const ACTIVATION_DEDUPE_MS = 500;
 
@@ -110,8 +113,15 @@ const postTelemetry = async (payload) => {
         throw new Error(`HTTP ${response.status} from ${endpoint}`);
       }
 
+      const prediction = await response.json().catch(() => null);
+
       globalTaskSwitches = 0;
-      return { ok: true, endpoint };
+      return {
+        ok: true,
+        endpoint,
+        telemetry: telemetryPayload,
+        prediction
+      };
     } catch (error) {
       lastError = error instanceof Error ? error.message : String(error);
     }
